@@ -11,5 +11,4 @@ import lombok.experimental.FieldDefaults;
 public class TestDto {
     long id;
     String name;
-    long age;
 }
