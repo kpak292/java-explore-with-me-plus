@@ -28,26 +28,24 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public Collection<StatsViewDto> getStats(String start, String end, ArrayList<String> uris, Boolean unique) {
         Collection<StatItem> stats;
-        List<String> uniqueUris;
         if (uris != null) {
             stats = statRepository.getStatsbyDatesAndUris(uris, LocalDateTime.parse(start, Constants.DATE_TIME_FORMATTER), LocalDateTime.parse(end, Constants.DATE_TIME_FORMATTER));
-            uniqueUris = uris;
         } else {
             stats = statRepository.getStatsbyDates(LocalDateTime.parse(start, Constants.DATE_TIME_FORMATTER), LocalDateTime.parse(end, Constants.DATE_TIME_FORMATTER));
         }
         if (!stats.isEmpty()) {
-            uniqueUris = stats.stream()
-                    .map(StatItem::getUri)
-                    .distinct()
-                    .toList();
-            return parseResult(uniqueUris, stats, unique);
+            return parseResult(stats, unique);
         } else {
             return new ArrayList<>();
         }
     }
 
-    private Collection<StatsViewDto> parseResult(List<String> uniqueUris, Collection<StatItem> items, Boolean unique) {
+    private Collection<StatsViewDto> parseResult(Collection<StatItem> items, Boolean unique) {
         List<StatsViewDto> result = new ArrayList<>();
+        List<String> uniqueUris = items.stream()
+                .map(StatItem::getUri)
+                .distinct()
+                .toList();
         if (unique) {
             for (int i = 0; i < uniqueUris.size(); i++) {
                 int finalI = i;
