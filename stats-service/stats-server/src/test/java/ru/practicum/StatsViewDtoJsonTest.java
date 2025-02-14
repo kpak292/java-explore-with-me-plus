@@ -15,7 +15,7 @@ public class StatsViewDtoJsonTest {
     private final JacksonTester<StatsViewDto> json;
 
     @Test
-    public void StatsHitDtoTest() throws Exception {
+    public void statsViewDtoTest() throws Exception {
         String app = "ewm-main-service";
         String uri = "/events/1";
         int hits = 10;

@@ -10,8 +10,6 @@ import ru.practicum.exceptions.ValidationException;
 import ru.practicum.mappers.StatsMapper;
 import ru.practicum.model.StatItem;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;

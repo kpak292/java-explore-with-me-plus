@@ -12,7 +12,6 @@ import ru.practicum.controller.StatsController;
 import ru.practicum.service.StatsService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;

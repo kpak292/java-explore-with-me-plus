@@ -17,7 +17,7 @@ public class StatsHitDtoJsonTest {
     private final JacksonTester<StatsHitDto> json;
 
     @Test
-    public void StatsHitDtoTest() throws Exception {
+    public void statsHitDtoTest() throws Exception {
         String app = "ewm-main-service";
         String uri = "/events/1";
         String ip = "192.163.0.1";
