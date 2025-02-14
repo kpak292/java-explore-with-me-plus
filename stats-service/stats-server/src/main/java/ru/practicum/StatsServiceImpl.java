@@ -1,7 +1,6 @@
 package ru.practicum;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.dal.StatRepository;
 import ru.practicum.mappers.StatMapper;
@@ -17,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
 
-    @Autowired
     private final StatRepository statRepository;
 
     @Override
