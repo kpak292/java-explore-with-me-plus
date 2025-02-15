@@ -53,7 +53,7 @@ class StatsClientTest {
     private final StatsViewDto statsViewDto = StatsViewDto.builder()
             .uri("test uri")
             .app("test app")
-            .hits(1)
+            .hits(1L)
             .build();
 
     @Test
@@ -88,6 +88,6 @@ class StatsClientTest {
         assertThat(result.size(), equalTo(1));
         assertThat(result.getFirst().getUri(), equalTo("test uri"));
         assertThat(result.getFirst().getApp(), equalTo("test app"));
-        assertThat(result.getFirst().getHits(), equalTo(1));
+        assertThat(result.getFirst().getHits(), equalTo(1L));
     }
 }
