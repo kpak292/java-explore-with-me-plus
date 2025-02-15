@@ -69,7 +69,7 @@ public class ControllerTest {
     public void getStatTest() throws Exception {
         String app = "ewm-main-service";
         String uri = "/events/1";
-        int hits = 10;
+        long hits = 10L;
 
         StatsViewDto statsViewDto = StatsViewDto.builder()
                 .app(app)
@@ -91,7 +91,7 @@ public class ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].app", is(app)))
                 .andExpect(jsonPath("$.[0].uri", is(uri)))
-                .andExpect(jsonPath("$.[0].hits", is(hits), Integer.class));
+                .andExpect(jsonPath("$.[0].hits", is(hits), Long.class));
 
 
         verify(statsService, Mockito.times(1))

@@ -18,7 +18,7 @@ public class StatsViewDtoJsonTest {
     public void statsViewDtoTest() throws Exception {
         String app = "ewm-main-service";
         String uri = "/events/1";
-        int hits = 10;
+        long hits = 10L;
 
         StatsViewDto statsViewDto = StatsViewDto.builder()
                 .app(app)
@@ -30,6 +30,6 @@ public class StatsViewDtoJsonTest {
 
         assertThat(content).extractingJsonPathStringValue("$.app").isEqualTo(app);
         assertThat(content).extractingJsonPathStringValue("$.uri").isEqualTo(uri);
-        assertThat(content).extractingJsonPathNumberValue("$.hits").isEqualTo(hits);
+        assertThat(content).extractingJsonPathNumberValue("$.hits").isEqualTo(10);
     }
 }
