@@ -2,6 +2,7 @@ package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.practicum.Constants;
 import ru.practicum.StatsHitDto;
 import ru.practicum.StatsViewDto;
@@ -11,9 +12,7 @@ import ru.practicum.mappers.StatsMapper;
 import ru.practicum.model.StatItem;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -48,52 +47,22 @@ public class StatsServiceImpl implements StatsService {
             throw new ValidationException("incorrect date format. expected format = " + Constants.DATE_PATTERN);
         }
 
-
-        Collection<StatItem> stats;
-        if (uris != null) {
-            stats = statRepository.getStatsbyDatesAndUris(uris, startDate, endDate);
-        } else {
-            stats = statRepository.getStatsbyDates(startDate, endDate);
-        }
-        if (!stats.isEmpty()) {
-            return parseResult(stats, unique);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    private Collection<StatsViewDto> parseResult(Collection<StatItem> items, Boolean unique) {
-        List<StatsViewDto> result = new ArrayList<>();
-        List<String> uniqueUris = items.stream()
-                .map(StatItem::getUri)
-                .distinct()
-                .toList();
-        if (unique) {
-            for (int i = 0; i < uniqueUris.size(); i++) {
-                int finalI = i;
-                Collection<StatItem> uniqueUri = items.stream()
-                        .filter(statItem -> statItem.getUri().equals(uniqueUris.get(finalI)))
-                        .toList();
-                result.add(StatsMapper.INSTANCE.getStatsViewDto(uniqueUri.stream().findFirst().get(),
-                        (int) items.stream()
-                                .filter(statItem -> statItem.getUri().equals(uniqueUris.get(finalI)))
-                                .map(StatItem::getIp)
-                                .distinct()
-                                .count()));
+        Collection<StatsViewDto> stats;
+        if (!CollectionUtils.isEmpty(uris)) {
+            if (unique) {
+                stats = statRepository.getStatsWithUrisUnique(startDate, endDate, uris);
+            } else {
+                stats = statRepository.getStatsWithUrisNotUnique(startDate, endDate, uris);
             }
         } else {
-            for (int i = 0; i < uniqueUris.size(); i++) {
-                int finalI = i;
-                Collection<StatItem> uniqueUri = items.stream()
-                        .filter(statItem -> statItem.getUri().equals(uniqueUris.get(finalI)))
-                        .toList();
-                result.add(StatsMapper.INSTANCE.getStatsViewDto(uniqueUri.stream().findFirst().get(), uniqueUri.size()));
+            if (unique) {
+                stats = statRepository.getStatsWithoutUrisUnique(startDate, endDate);
+            } else {
+                stats = statRepository.getStatsWithoutUrisNotUnique(startDate, endDate);
             }
         }
-        result = result.stream().sorted(Comparator.comparingInt(StatsViewDto::getHits).reversed())
-                .toList();
-        return result;
-    }
 
+        return stats;
+    }
 
 }

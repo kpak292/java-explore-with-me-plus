@@ -58,13 +58,13 @@ public class StatsServiceTest {
         statsViewDtoUnique = StatsViewDto.builder()
                 .app(app)
                 .uri(uri)
-                .hits(1)
+                .hits(1L)
                 .build();
 
         statsViewDtoNotUnique = StatsViewDto.builder()
                 .app(app)
                 .uri(uri)
-                .hits(2)
+                .hits(2L)
                 .build();
     }
 
@@ -82,67 +82,65 @@ public class StatsServiceTest {
 
     @Test
     public void getStatsWithUrisUnique() {
-        when(statRepository.getStatsbyDatesAndUris(Mockito.any(List.class),
+        when(statRepository.getStatsWithUrisUnique(Mockito.any(LocalDateTime.class),
                 Mockito.any(LocalDateTime.class),
-                Mockito.any(LocalDateTime.class)))
-                .thenReturn(List.of(StatsMapper.INSTANCE.getStatItem(statsHitDto)));
+                Mockito.any(List.class)))
+                .thenReturn(List.of(statsViewDtoUnique));
 
         Collection<StatsViewDto> result = statsService.getStats(start, end, List.of(uri), true);
 
         assertArrayEquals(List.of(statsViewDtoUnique).toArray(), result.toArray());
 
         verify(statRepository, Mockito.times(1))
-                .getStatsbyDatesAndUris(Mockito.any(List.class),
+                .getStatsWithUrisUnique(Mockito.any(LocalDateTime.class),
                         Mockito.any(LocalDateTime.class),
-                        Mockito.any(LocalDateTime.class));
+                        Mockito.any(List.class));
     }
 
     @Test
     public void getStatsWithUrisNotUnique() {
-        when(statRepository.getStatsbyDatesAndUris(Mockito.any(List.class),
+        when(statRepository.getStatsWithUrisNotUnique(Mockito.any(LocalDateTime.class),
                 Mockito.any(LocalDateTime.class),
-                Mockito.any(LocalDateTime.class)))
-                .thenReturn(List.of(StatsMapper.INSTANCE.getStatItem(statsHitDto),
-                        StatsMapper.INSTANCE.getStatItem(statsHitDto)));
+                Mockito.any(List.class)))
+                .thenReturn(List.of(statsViewDtoNotUnique));
 
         Collection<StatsViewDto> result = statsService.getStats(start, end, List.of(uri), false);
 
         assertArrayEquals(List.of(statsViewDtoNotUnique).toArray(), result.toArray());
 
         verify(statRepository, Mockito.times(1))
-                .getStatsbyDatesAndUris(Mockito.any(List.class),
+                .getStatsWithUrisNotUnique(Mockito.any(LocalDateTime.class),
                         Mockito.any(LocalDateTime.class),
-                        Mockito.any(LocalDateTime.class));
-    }
-
-    @Test
-    public void getStatsWithoutUrisUnique() {
-        when(statRepository.getStatsbyDates(Mockito.any(LocalDateTime.class),
-                Mockito.any(LocalDateTime.class)))
-                .thenReturn(List.of(StatsMapper.INSTANCE.getStatItem(statsHitDto)));
-
-        Collection<StatsViewDto> result = statsService.getStats(start, end, null, true);
-
-        assertArrayEquals(List.of(statsViewDtoUnique).toArray(), result.toArray());
-
-        verify(statRepository, Mockito.times(1))
-                .getStatsbyDates(Mockito.any(LocalDateTime.class),
-                        Mockito.any(LocalDateTime.class));
+                        Mockito.any(List.class));
     }
 
     @Test
     public void getStatsWithoutUrisNotUnique() {
-        when(statRepository.getStatsbyDates(Mockito.any(LocalDateTime.class),
+        when(statRepository.getStatsWithoutUrisNotUnique(Mockito.any(LocalDateTime.class),
                 Mockito.any(LocalDateTime.class)))
-                .thenReturn(List.of(StatsMapper.INSTANCE.getStatItem(statsHitDto),
-                        StatsMapper.INSTANCE.getStatItem(statsHitDto)));
+                .thenReturn(List.of(statsViewDtoNotUnique));
 
         Collection<StatsViewDto> result = statsService.getStats(start, end, null, false);
 
         assertArrayEquals(List.of(statsViewDtoNotUnique).toArray(), result.toArray());
 
         verify(statRepository, Mockito.times(1))
-                .getStatsbyDates(Mockito.any(LocalDateTime.class),
+                .getStatsWithoutUrisNotUnique(Mockito.any(LocalDateTime.class),
+                        Mockito.any(LocalDateTime.class));
+    }
+
+    @Test
+    public void getStatsWithoutUrisUnique() {
+        when(statRepository.getStatsWithoutUrisUnique(Mockito.any(LocalDateTime.class),
+                Mockito.any(LocalDateTime.class)))
+                .thenReturn(List.of(statsViewDtoUnique));
+
+        Collection<StatsViewDto> result = statsService.getStats(start, end, null, true);
+
+        assertArrayEquals(List.of(statsViewDtoUnique).toArray(), result.toArray());
+
+        verify(statRepository, Mockito.times(1))
+                .getStatsWithoutUrisUnique(Mockito.any(LocalDateTime.class),
                         Mockito.any(LocalDateTime.class));
     }
 
