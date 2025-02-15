@@ -10,8 +10,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 public class StatsViewDto {
     String app;
-
     String uri;
-
-    int hits;
+    long hits;
 }
