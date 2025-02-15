@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.practicum.StatsHitDto;
-import ru.practicum.StatsViewDto;
 import ru.practicum.model.StatItem;
 
 @Mapper
@@ -16,6 +15,4 @@ public interface StatsMapper {
 
     @Mapping(target = "timestamp", source = "created")
     StatsHitDto getStatsHitDto(StatItem statItem);
-
-    StatsViewDto getStatsViewDto(StatItem statItem, int hits);
 }
