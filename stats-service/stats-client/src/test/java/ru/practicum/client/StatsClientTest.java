@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
+import ru.practicum.Constants;
 import ru.practicum.StatsHitDto;
 import ru.practicum.StatsViewDto;
 import ru.practicum.client.configuration.StatsClientConfiguration;
@@ -38,7 +39,8 @@ class StatsClientTest {
 
     @Autowired
     private MockRestServiceServer mockServer;
-    private final ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper mapper;
 
     private final StatsHitDto statsHitDto = StatsHitDto.builder()
             .id(1L)
@@ -55,13 +57,21 @@ class StatsClientTest {
             .build();
 
     @Test
-    void testHit() {
+    void testHit() throws JsonProcessingException {
         mockServer
                 .expect(ExpectedCount.once(), requestTo(PREP_POST_REQUEST))
                 .andExpect(method(HttpMethod.POST))
-                .andRespond(withStatus(HttpStatus.OK));
-        statsClient.hit(statsHitDto);
+                .andRespond(withStatus(HttpStatus.CREATED)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(statsHitDto)));
+        StatsHitDto result = statsClient.hit(statsHitDto);
         mockServer.verify();
+        assertThat(result.getId(), equalTo(1L));
+        assertThat(result.getApp(), equalTo("test app"));
+        assertThat(result.getUri(), equalTo("test uri"));
+        assertThat(result.getIp(), equalTo("127.0.0.1"));
+        assertThat(result.getTimestamp().format(Constants.DATE_TIME_FORMATTER),
+                equalTo(statsHitDto.getTimestamp().format(Constants.DATE_TIME_FORMATTER)));
     }
 
     @Test

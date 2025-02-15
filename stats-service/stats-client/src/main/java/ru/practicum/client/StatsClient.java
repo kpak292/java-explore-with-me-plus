@@ -6,7 +6,7 @@ import ru.practicum.StatsViewDto;
 import java.util.List;
 
 public interface StatsClient {
-    void hit(StatsHitDto statsHitDto);
+    StatsHitDto hit(StatsHitDto statsHitDto);
 
     List<StatsViewDto> getStats(String start, String end, List<String> uris, Boolean unique);
 }

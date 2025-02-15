@@ -27,15 +27,17 @@ public class StatsClientImpl implements StatsClient {
     }
 
     @Override
-    public void hit(StatsHitDto statsHitDto) {
+    public StatsHitDto hit(StatsHitDto statsHitDto) {
         log.info("save statistics for {}", statsHitDto);
         try {
-            restClient.post()
+            return restClient.post()
                     .uri(baseUri + "/hit")
                     .body(statsHitDto)
-                    .retrieve();
+                    .retrieve()
+                    .body(StatsHitDto.class);
         } catch (Exception e) {
             log.error(e.getMessage());
+            return null;
         }
     }
 
