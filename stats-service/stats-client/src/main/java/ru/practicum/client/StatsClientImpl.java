@@ -1,8 +1,8 @@
 package ru.practicum.client;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -12,20 +12,18 @@ import ru.practicum.StatsHitDto;
 import ru.practicum.StatsViewDto;
 
 import java.util.List;
+import java.util.Optional;
 
+@SpringBootConfiguration
 @Slf4j
 @Service
 public class StatsClientImpl implements StatsClient {
-    private final String baseUri;
+    @Value("${stats-server.url}")
+    private String baseUri;
     private final RestClient restClient;
 
-    @Autowired
-    public StatsClientImpl(@Value("${stats-server.url}") String baseUri) {
-        this.baseUri = baseUri;
-        restClient = RestClient.builder()
-                .baseUrl(baseUri)
-                .defaultHeader("Content-Type", "application/json")
-                .build();
+    public StatsClientImpl(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     @Override
@@ -33,7 +31,7 @@ public class StatsClientImpl implements StatsClient {
         log.info("save statistics for {}", statsHitDto);
         try {
             restClient.post()
-                    .uri("/hit")
+                    .uri(baseUri + "/hit")
                     .body(statsHitDto)
                     .retrieve();
         } catch (Exception e) {
@@ -47,19 +45,14 @@ public class StatsClientImpl implements StatsClient {
                 start, end, uris, unique);
         try {
             UriComponents uriComponents = UriComponentsBuilder
-                    /*
-                     к сожалению restClient при совместном использовании с UriComponentsBuilder
-                     игнорирует baseUri в RestClient.builder() и выдает ошибку "URI with undefined scheme"
-                     поэтому в fromUriString в данном случае baseUri используется явно, либо есть другой способ
-                    */
                     .fromUriString(baseUri + "/stats")
                     .queryParam("start", start)
                     .queryParam("end", end)
-                    .queryParam("uris", uris)
+                    .queryParamIfPresent("uris", Optional.ofNullable(uris))
                     .queryParam("unique", unique)
                     .encode()
                     .build();
-            log.info("uriComponents encoded {}", uriComponents.toUri());
+            log.debug("uriComponents encoded {}", uriComponents.toUri());
             return restClient.get()
                     .uri(uriComponents.toUri())
                     .retrieve()
