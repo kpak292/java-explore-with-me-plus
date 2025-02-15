@@ -1,14 +1,17 @@
-package ru.practicum;
+package ru.practicum.service;
 
-import java.util.ArrayList;
+import ru.practicum.StatsHitDto;
+import ru.practicum.StatsViewDto;
+
 import java.util.Collection;
+import java.util.List;
 
 public interface StatsService {
 
-    void saveHit(StatsHitDto hitDto);
+    StatsHitDto saveHit(StatsHitDto hitDto);
 
     Collection<StatsViewDto> getStats(String start,
                                       String end,
-                                      ArrayList<String> uris,
+                                      List<String> uris,
                                       Boolean unique);
 }
