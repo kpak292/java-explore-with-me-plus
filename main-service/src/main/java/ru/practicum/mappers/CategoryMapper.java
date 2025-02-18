@@ -6,11 +6,11 @@ import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.model.Category;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-    Category getCategory(NewCategoryDto newCategoryDto);
+    Category toCategory(NewCategoryDto newCategoryDto);
 
-    CategoryDto getCategoryDto(Category category);
+    CategoryDto toCategoryDto(Category category);
 }

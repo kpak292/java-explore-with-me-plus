@@ -16,4 +16,9 @@ public class ErrorHandler {
         return ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
+    @ExceptionHandler
+    public ErrorResponse notFoundHandler(final NotFoundException e) {
+        log.error(e.getMessage());
+        return ErrorResponse.create(e, HttpStatus.NOT_FOUND, e.getMessage());
+    }
 }
