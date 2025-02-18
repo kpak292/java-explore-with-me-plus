@@ -86,8 +86,8 @@ class StatsClientTest {
                 "2025-02-15 15:15:00", List.of("test uri"), true);
         mockServer.verify();
         assertThat(result.size(), equalTo(1));
-        assertThat(result.getFirst().getUri(), equalTo("test uri"));
-        assertThat(result.getFirst().getApp(), equalTo("test app"));
-        assertThat(result.getFirst().getHits(), equalTo(1L));
+        assertThat(result.get(0).getUri(), equalTo("test uri"));
+        assertThat(result.get(0).getApp(), equalTo("test app"));
+        assertThat(result.get(0).getHits(), equalTo(1L));
     }
 }

@@ -3,13 +3,16 @@ package ru.practicum.model;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "stats")
