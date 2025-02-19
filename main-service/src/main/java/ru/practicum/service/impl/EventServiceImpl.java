@@ -197,7 +197,7 @@ public class EventServiceImpl implements EventService {
 
         if (rangeEnd != null) {
             end = LocalDateTime.parse(rangeEnd, Constants.DATE_TIME_FORMATTER);
-            if (end.isBefore(start)){
+            if (end.isBefore(start)) {
                 throw new ValidationException("End is before start");
             }
         }
