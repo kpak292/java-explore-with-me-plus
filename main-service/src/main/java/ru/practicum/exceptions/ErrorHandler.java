@@ -29,4 +29,10 @@ public class ErrorHandler {
         log.error(e.getMessage());
         return ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
     }
+
+    @ExceptionHandler
+    public ErrorResponse conflictExceptionHandler(final ConflictException e) {
+        log.error(e.getMessage());
+        return ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
+    }
 }

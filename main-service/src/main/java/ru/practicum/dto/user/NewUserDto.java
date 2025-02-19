@@ -1,7 +1,7 @@
 package ru.practicum.dto.user;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,12 +13,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewUserDto {
-    @Size(min =2, max = 250)
-    @NotNull
+    @Size(min = 2, max = 250)
+    @NotBlank
     String name;
 
     @Size(min = 6, max = 254)
     @Email
-    @NotNull
+    @NotBlank
     String email;
 }

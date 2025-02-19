@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.dto.event.EventState;
+import ru.practicum.dto.event.enums.EventState;
 
 import java.time.LocalDateTime;
 

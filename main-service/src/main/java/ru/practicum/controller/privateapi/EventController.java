@@ -34,9 +34,11 @@ public class EventController {
     }
 
     @GetMapping("/{userId}/events")
-    public Collection<EventShortDto> getEvents(@PathVariable long userId) {
+    public Collection<EventShortDto> getEvents(@PathVariable long userId,
+                                               @RequestParam(defaultValue = "0") Integer from,
+                                               @RequestParam(defaultValue = "10") Integer size) {
         log.info("getting events for user {}", userId);
-        return eventService.findEvents(userId);
+        return eventService.findEvents(userId, from, size);
     }
 
     @GetMapping("/{userId}/events/{eventId}")
