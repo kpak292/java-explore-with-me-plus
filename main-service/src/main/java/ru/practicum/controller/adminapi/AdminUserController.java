@@ -24,6 +24,7 @@ public class AdminUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto newUser(@RequestBody @Valid NewUserDto dto) {
+
         log.info("Creating new user with body {}", dto);
         return userService.newUser(dto);
     }
