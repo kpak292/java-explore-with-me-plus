@@ -12,7 +12,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "categories")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = IDENTITY)

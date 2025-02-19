@@ -1,8 +1,9 @@
-package ru.practicum.service;
+package ru.practicum.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,7 @@ import ru.practicum.dto.user.UserDto;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mappers.UserMapper;
 import ru.practicum.model.User;
+import ru.practicum.service.UserService;
 
 import java.util.Collection;
 
@@ -20,7 +22,7 @@ import java.util.Collection;
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    @Autowired
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 

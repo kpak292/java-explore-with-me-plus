@@ -13,8 +13,8 @@ erDiagram
 
     users {
         bigint id PK
-        varchar(100) name
-        varchar(100) email
+        varchar(250) name
+        varchar(254) email
     }
 
     locations {
@@ -25,11 +25,11 @@ erDiagram
 
     events {
         bigint id PK
-        varchar(100) annotation
+        varchar(2000) annotation
         bigint category_id FK
         bigint confirmed_requests
         timestamp created_on
-        varchar(255) description
+        varchar(7000) description
         timestamp event_date
         bigint user_id FK
         bigint location_id FK
@@ -38,6 +38,8 @@ erDiagram
         timestamp published_on
         boolean request_moderation
         varchar(100) state
+        varchar(120) title
+        bigint views
     }
 
     users ||--o{ events: user_id

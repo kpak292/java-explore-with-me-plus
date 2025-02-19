@@ -6,6 +6,8 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLException;
+
 @Slf4j
 @ControllerAdvice
 public class ErrorHandler {
@@ -20,5 +22,11 @@ public class ErrorHandler {
     public ErrorResponse notFoundHandler(final NotFoundException e) {
         log.error(e.getMessage());
         return ErrorResponse.create(e, HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ErrorResponse sQLExceptionHandler(final SQLException e) {
+        log.error(e.getMessage());
+        return ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
     }
 }

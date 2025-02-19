@@ -29,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto save(NewCategoryDto newCategoryDto) {
         Category category = categoryRepository.save(categoryMapper.toCategory(newCategoryDto));
         log.info("New category with id {} saved", category.getId());
+        //todo Необходимо сделать проверку, что новое имя не дублирует существующие в БД
         return categoryMapper.toCategoryDto(category);
     }
 
@@ -47,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Updating category - from: {} to: {}", category, categoryDto);
         category.setName(categoryDto.getName());
         // если есть @Transactional то не надо дергать save репозитория
+        //todo Необходимо сделать проверку, что новое имя не дублирует существующие в БД
         return categoryMapper.toCategoryDto(category);
     }
 

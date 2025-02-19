@@ -13,11 +13,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewUserDto {
-    @Size(max = 100)
+    @Size(min =2, max = 250)
     @NotNull
     String name;
 
-    @Size(max = 100)
+    @Size(min = 6, max = 254)
     @Email
     @NotNull
     String email;

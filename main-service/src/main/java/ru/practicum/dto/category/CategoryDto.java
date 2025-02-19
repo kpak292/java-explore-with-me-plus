@@ -15,8 +15,9 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class CategoryDto {
     Long id;
-
-    @Size(max = 50)
-    @NotBlank
     String name;
+
+    public CategoryDto(Long id) {
+        this.id = id;
+    }
 }

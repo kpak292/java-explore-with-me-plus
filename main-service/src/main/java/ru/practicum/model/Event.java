@@ -63,5 +63,9 @@ public class Event {
     @Enumerated(EnumType.STRING)
     EventState state;
 
+    @Column(name = "title")
+    String title;
+
+    @Column(name = "views")
     Long views;
 }
