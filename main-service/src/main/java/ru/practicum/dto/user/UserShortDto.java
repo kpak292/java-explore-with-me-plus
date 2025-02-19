@@ -1,7 +1,5 @@
 package ru.practicum.dto.user;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,9 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserShortDto {
-    long id;
-
-    @Size(max = 100)
-    @NotNull
+    Long id;
     String name;
 }

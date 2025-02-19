@@ -1,4 +1,4 @@
-package ru.practicum.service;
+package ru.practicum.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mappers.CategoryMapper;
 import ru.practicum.model.Category;
+import ru.practicum.service.CategoryService;
 
 import java.util.List;
 

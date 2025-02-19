@@ -8,7 +8,7 @@ TEAM 1 PROJECT
 erDiagram
     categories {
         bigint id PK
-        varchar(100) name
+        varchar(50) name
     }
 
     users {
@@ -16,6 +16,33 @@ erDiagram
         varchar(100) name
         varchar(100) email
     }
+
+    locations {
+        bigint id PK
+        double lat
+        double lon
+    }
+
+    events {
+        bigint id PK
+        varchar(100) annotation
+        bigint category_id FK
+        bigint confirmed_requests
+        timestamp created_on
+        varchar(255) description
+        timestamp event_date
+        bigint user_id FK
+        bigint location_id FK
+        boolean paid
+        integer participant_limit
+        timestamp published_on
+        boolean request_moderation
+        varchar(100) state
+    }
+
+    users ||--o{ events: user_id
+    categories ||--o{ events: category_id
+    locations ||--o{ events: location_id
 ```
 
 ## Stats DB structure
