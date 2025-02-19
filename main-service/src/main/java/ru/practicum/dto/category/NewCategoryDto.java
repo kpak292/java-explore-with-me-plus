@@ -1,6 +1,6 @@
 package ru.practicum.dto.category;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class NewCategoryDto {
-    @Size(max = 100)
-    @NotNull
+    @Size(max = 50)
+    @NotBlank
     String name;
 }
