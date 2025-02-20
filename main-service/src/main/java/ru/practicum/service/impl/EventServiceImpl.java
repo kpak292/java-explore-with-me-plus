@@ -46,7 +46,7 @@ public class EventServiceImpl implements EventService {
     public EventDto save(long userId, NewEventDto newEventDto) {
         LocalDateTime validDate = LocalDateTime.now().plusHours(2L);
         if (newEventDto.getEventDate() != null && newEventDto.getEventDate().isBefore(validDate)) {
-            throw new ConflictException("Event date should be after two hours after now");
+            throw new ValidationException("Event date should be after two hours after now");
         }
 
         User initiator = userRepository.findById(userId)
@@ -92,7 +92,7 @@ public class EventServiceImpl implements EventService {
     public EventDto updateEvent(long eventId, long userId, UpdateEventUserRequest updateEventUserRequest) {
         LocalDateTime validDate = LocalDateTime.now().plusHours(2L);
         if (updateEventUserRequest.getEventDate() != null && updateEventUserRequest.getEventDate().isBefore(validDate)) {
-            throw new ConflictException("Event date should be after two hours after now");
+            throw new ValidationException("Event date should be after two hours after now");
         }
 
         User user = userRepository.findById(userId)
@@ -115,7 +115,7 @@ public class EventServiceImpl implements EventService {
     public EventDto updateEventAdmin(long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         LocalDateTime validDate = LocalDateTime.now().plusHours(2L);
         if (updateEventAdminRequest.getEventDate() != null && updateEventAdminRequest.getEventDate().isBefore(validDate)) {
-            throw new ConflictException("Event date should be after two hours after now");
+            throw new ValidationException("Event date should be after two hours after now");
         }
 
         Event event = eventRepository.findById(eventId)
