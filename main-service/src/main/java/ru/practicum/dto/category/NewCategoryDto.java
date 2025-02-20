@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class NewCategoryDto {
-    @Size(max = 50)
+    @Size(min = 1, max = 50)
     @NotBlank
     String name;
 }

@@ -1,4 +1,4 @@
-package ru.practicum.dto.user;
+package ru.practicum.dto.event;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,9 +9,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"email"})
-public class UserDto {
-    Long id;
-    String name;
-    String email;
+@EqualsAndHashCode
+public class LocationDto {
+    Double lat;
+    Double lon;
 }

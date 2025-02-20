@@ -1,4 +1,4 @@
-package ru.practicum.service;
+package ru.practicum.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mappers.CategoryMapper;
 import ru.practicum.model.Category;
+import ru.practicum.service.CategoryService;
 
 import java.util.List;
 
@@ -41,10 +42,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public CategoryDto update(Long id, CategoryDto categoryDto) {
+    public CategoryDto update(Long id, NewCategoryDto newCategoryDto) {
         Category category = getCategoryIfExists(id);
-        log.info("Updating category - from: {} to: {}", category, categoryDto);
-        category.setName(categoryDto.getName());
+        log.info("Updating category - from: {} to: {}", category, newCategoryDto);
+        category.setName(newCategoryDto.getName());
         // если есть @Transactional то не надо дергать save репозитория
         return categoryMapper.toCategoryDto(category);
     }

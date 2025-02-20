@@ -1,7 +1,5 @@
 package ru.practicum.dto.category;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,9 +12,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class CategoryDto {
-    long id;
-
-    @Size(max = 50)
-    @NotBlank
+    Long id;
     String name;
+
+    public CategoryDto(Long id) {
+        this.id = id;
+    }
 }

@@ -1,5 +1,6 @@
 package ru.practicum.controller.adminapi;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class AdminUserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto newUser(@RequestBody NewUserDto dto) {
+    public UserDto newUser(@RequestBody @Valid NewUserDto dto) {
+
         log.info("Creating new user with body {}", dto);
         return userService.newUser(dto);
     }

@@ -12,15 +12,15 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "locations")
+public class Location {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     long id;
 
-    @Column(name = "name")
-    String name;
+    @Column(name = "lat")
+    Double lat;
 
-    @Column(name = "email")
-    String email;
+    @Column(name = "lon")
+    Double lon;
 }
