@@ -9,7 +9,6 @@ import ru.practicum.dto.event.enums.EventState;
 import ru.practicum.model.Event;
 
 @Mapper(
-
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )

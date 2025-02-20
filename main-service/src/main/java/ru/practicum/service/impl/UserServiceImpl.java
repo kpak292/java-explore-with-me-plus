@@ -17,6 +17,7 @@ import ru.practicum.model.User;
 import ru.practicum.service.UserService;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -35,9 +36,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<UserDto> getAllUsers(int from, int size) {
+    public Collection<UserDto> getAllUsers(List<Long> ids, int from, int size) {
         Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size, Sort.by(Sort.Direction.ASC, "id"));
-        return userRepository.findAll(pageable).stream()
+        return userRepository.findAllByFilter(ids, pageable).stream()
                 .map(userMapper::getUserDto)
                 .toList();
     }

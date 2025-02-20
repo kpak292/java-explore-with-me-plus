@@ -5,16 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.practicum.model.Compilation;
-import ru.practicum.model.User;
 
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface CompilationRepository extends JpaRepository<Compilation, Long> {
     @Query("""
-            SELECT u
-            FROM User as u
-            WHERE (:ids IS NULL OR u.id in :ids)
+            SELECT c
+            FROM Compilation as c
+            WHERE (:pinned IS NULL OR c.pinned = :pinned)
             """)
-    List<User> findAllByFilter(List<Long> ids, Pageable pageable);
+    List<Compilation> findAllByFilterPublic(Boolean pinned, Pageable pageable);
 }
