@@ -12,6 +12,7 @@ import ru.practicum.dto.user.UserDto;
 import ru.practicum.service.UserService;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -30,10 +31,11 @@ public class AdminUserController {
     }
 
     @GetMapping
-    public Collection<UserDto> findAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") int from,
+    public Collection<UserDto> findAllUsers(@RequestParam(required = false) List<Long> ids,
+                                            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") int from,
                                             @Positive @RequestParam(name = "size", defaultValue = "10") int size) {
         log.info("Tryind to get all users from {}, size {}", from, size);
-        return userService.getAllUsers(from, size);
+        return userService.getAllUsers(ids, from, size);
     }
 
     @DeleteMapping("/{userId}")
