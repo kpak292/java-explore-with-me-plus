@@ -1,5 +1,6 @@
 package ru.practicum.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.enums.SortingOptions;
 
@@ -32,8 +33,9 @@ public interface EventService {
                                                  Boolean onlyAvailable,
                                                  SortingOptions sortingOptions,
                                                  int from,
-                                                 int size);
+                                                 int size,
+                                                 HttpServletRequest request);
 
-    EventDto findEventPublic(long eventId);
+    EventDto findEventPublic(long eventId, HttpServletRequest request);
 }
 

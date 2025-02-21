@@ -12,5 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class StatsViewDto {
     String app;
     String uri;
-    long hits;
+    Long hits;
 }
