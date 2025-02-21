@@ -237,16 +237,19 @@ public class EventServiceImpl implements EventService {
                 throw new ConflictException("Event initiator can't make a request");
             if (event.getState() != EventState.PUBLISHED)
                 throw new ConflictException("Event with id = " + eventId + " is not published yet");
-            if (event.getParticipantLimit() <= event.getConfirmedRequests())
+            if ((event.getParticipantLimit() != 0) && (event.getParticipantLimit() <= event.getConfirmedRequests()))
                 throw new ConflictException("Limit of requests reached on event with id = " + event);
             Request request = new Request();
             request.setUserId(user);
             request.setEventId(event);
             request.setCreatedOn(LocalDateTime.now());
-            if (event.getRequestModeration())
+            if (event.getParticipantLimit() != 0 && event.getRequestModeration())
                 request.setStatus(RequestStatus.PENDING);
-            else
+            else {
                 request.setStatus(RequestStatus.CONFIRMED);
+                event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+                eventRepository.save(event);
+            }
             return RequestMapper.INSTANCE.toParticipationRequestDto(requestRepository.save(request));
         } else
             throw new ConflictException("Request from user with id = " + userId +
@@ -300,14 +303,19 @@ public class EventServiceImpl implements EventService {
             throw new ValidationException("User with id = " + userId + " is not a initiator of event with id = " + eventId);
 
         Collection<Request> requests = requestRepository.findAllRequestsOnEventByIds(eventId,
-                RequestStatus.PENDING,
                 request.getRequestIds());
         int limit = event.getParticipantLimit() - event.getConfirmedRequests().intValue();
+        int confirmed = event.getConfirmedRequests().intValue();
+        if (limit == 0)
+            throw new ConflictException("Limit of participant reached");
         for (Request req : requests) {
+            if (!req.getStatus().equals(RequestStatus.PENDING))
+                throw new ConflictException("Status of the request with id = " + req.getId() + " is " + req.getStatus());
             if (request.getStatus().equals(RequestStatus.REJECTED)) {
                 req.setStatus(RequestStatus.REJECTED);
             } else if (event.getParticipantLimit() == 0 || !event.getRequestModeration()) {
                 req.setStatus(RequestStatus.CONFIRMED);
+                confirmed++;
             } else if (limit == 0) {
                 req.setStatus(RequestStatus.REJECTED);
             } else {
@@ -316,15 +324,18 @@ public class EventServiceImpl implements EventService {
             }
             requestRepository.save(req);
         }
-        event.setConfirmedRequests((long) event.getParticipantLimit() - limit);
+        if (event.getParticipantLimit() != 0)
+            event.setConfirmedRequests((long) event.getParticipantLimit() - limit);
+        else
+            event.setConfirmedRequests((long) confirmed);
         eventRepository.save(event);
         EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
-        result.setConfirmedRequests(requestRepository.findAllRequestsOnEventByIds(eventId,
+        result.setConfirmedRequests(requestRepository.findAllRequestsOnEventByIdsAndStatus(eventId,
                         RequestStatus.CONFIRMED,
                         request.getRequestIds()).stream()
                 .map(RequestMapper.INSTANCE::toParticipationRequestDto)
                 .toList());
-        result.setRejectedRequests(requestRepository.findAllRequestsOnEventByIds(eventId,
+        result.setRejectedRequests(requestRepository.findAllRequestsOnEventByIdsAndStatus(eventId,
                         RequestStatus.REJECTED,
                         request.getRequestIds()).stream()
                 .map(RequestMapper.INSTANCE::toParticipationRequestDto)
