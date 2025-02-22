@@ -47,6 +47,10 @@ public class StatsServiceImpl implements StatsService {
             throw new ValidationException("incorrect date format. expected format = " + Constants.DATE_PATTERN);
         }
 
+        if (startDate.isAfter(endDate)) {
+            throw new ValidationException("start date must be before end date");
+        }
+
         Collection<StatsViewDto> stats;
         if (!CollectionUtils.isEmpty(uris)) {
             if (unique) {
