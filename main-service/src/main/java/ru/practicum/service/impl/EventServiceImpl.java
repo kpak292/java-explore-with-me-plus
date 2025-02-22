@@ -2,6 +2,9 @@ package ru.practicum.service.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class EventServiceImpl implements EventService {
     @Autowired
@@ -230,7 +234,8 @@ public class EventServiceImpl implements EventService {
                 .map(x -> "/event/" + x.getId())
                 .toList();
 
-        String startStatsDate = events.stream().map(Event::getPublishedOn)
+        String startStatsDate = events.stream()
+                .map(Event::getPublishedOn)
                 .min(LocalDateTime::compareTo).get().format(Constants.DATE_TIME_FORMATTER);
         String endStatsDate = LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER);
 
@@ -260,7 +265,8 @@ public class EventServiceImpl implements EventService {
                         .format(Constants.DATE_TIME_FORMATTER),
                 LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER)
                 , List.of(request.getRequestURI())
-                , false);
+                , true);
+        log.debug("received from stats client list of StatsViewDto: {}", views);
         baseEvent.setViews(views.get(0).getHits());
         eventRepository.save(baseEvent);
         return EventMapper.INSTANCE.getEventDto(baseEvent);
@@ -385,6 +391,8 @@ public class EventServiceImpl implements EventService {
     }
 
     private void sendStats(HttpServletRequest request) {
+        log.debug("save stats hit, uri = {}", request.getRequestURI());
+        log.debug("save stats hit, remoteAddr = {}", request.getRemoteAddr());
         statsClient.hit(StatsHitDto.builder()
                 .app("main-service")
                 .uri(request.getRequestURI())
