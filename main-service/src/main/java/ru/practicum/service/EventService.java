@@ -1,5 +1,6 @@
 package ru.practicum.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.enums.SortingOptions;
 
@@ -33,9 +34,8 @@ public interface EventService {
                                                  Boolean onlyAvailable,
                                                  SortingOptions sortingOptions,
                                                  int from,
-                                                 int size);
-
-    EventDto findEventPublic(long eventId);
+                                                 int size,
+                                                 HttpServletRequest request);
 
     ParticipationRequestDto newRequest(long userId, long eventId);
 
@@ -48,5 +48,7 @@ public interface EventService {
     EventRequestStatusUpdateResult updateRequestsStatus(long userId,
                                                         long eventId,
                                                         EventRequestStatusUpdateRequest request);
+
+    EventDto findEventPublic(long eventId, HttpServletRequest request);
 }
 

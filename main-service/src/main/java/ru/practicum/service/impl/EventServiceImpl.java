@@ -1,12 +1,17 @@
 package ru.practicum.service.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.Constants;
+import ru.practicum.StatsHitDto;
+import ru.practicum.StatsViewDto;
+import ru.practicum.client.StatsClient;
 import ru.practicum.dal.*;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.enums.EventActionStateAdmin;
@@ -29,7 +34,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class EventServiceImpl implements EventService {
     @Autowired
@@ -46,6 +54,9 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     RequestRepository requestRepository;
+
+    @Autowired
+    private StatsClient statsClient;
 
     @Override
     public EventDto save(long userId, NewEventDto newEventDto) {
@@ -182,7 +193,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> findEventsByFilterPublic(String text, List<Long> categories, Boolean paid,
                                                         String rangeStart, String rangeEnd, Boolean onlyAvailable,
-                                                        SortingOptions sortingOptions, int from, int size) {
+                                                        SortingOptions sortingOptions, int from, int size,
+                                                        HttpServletRequest request) {
         Pageable pageable;
         if (sortingOptions != null) {
             String sort = sortingOptions == SortingOptions.EVENT_DATE ? "eventDate" : "views";
@@ -207,21 +219,50 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        //todo добавить отправку запроса в сервис статистики
-        //todo добавить количество одобренных заявок
+        sendStats(request);
 
-        return eventRepository.findAllByFilterPublic(text, categories, paid, start, end, onlyAvailable,
-                        EventState.PUBLISHED, pageable).stream()
+        List<Event> events = eventRepository.findAllByFilterPublic(text, categories, paid, start, end, onlyAvailable,
+                EventState.PUBLISHED, pageable);
+
+        List<String> uris = events.stream()
+                .map(x -> "/event/" + x.getId())
+                .toList();
+
+        String startStatsDate = events.stream()
+                .map(Event::getPublishedOn)
+                .min(LocalDateTime::compareTo).get().format(Constants.DATE_TIME_FORMATTER);
+        String endStatsDate = LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER);
+
+        List<StatsViewDto> statViews = statsClient.getStats(startStatsDate, endStatsDate, uris, false);
+        Map<String, Long> eventViews = statViews.stream()
+                .collect(Collectors.toMap(StatsViewDto::getUri, StatsViewDto::getHits));
+        eventViews.forEach((uri, hits) -> {
+            String[] uriSplit = "/".split(uri);
+            long partUri = Long.parseLong(uriSplit[uriSplit.length - 1]);
+            events.stream()
+                    .filter(x -> x.getId() == partUri)
+                    .findFirst()
+                    .ifPresent(x -> x.setViews(hits));
+        });
+        eventRepository.saveAll(events);
+        return events.stream()
                 .map(EventMapper.INSTANCE::getEventShortDto)
                 .toList();
     }
 
     @Override
-    public EventDto findEventPublic(long eventId) {
+    public EventDto findEventPublic(long eventId, HttpServletRequest request) {
         Event baseEvent = eventRepository.findByIdAndStatus(eventId, EventState.PUBLISHED)
                 .orElseThrow(() -> new NotFoundException("published event is not found with id = " + eventId));
-        //todo добавить отправку запроса в сервис статистики
-        //todo добавить количество одобренных заявок
+        sendStats(request);
+        List<StatsViewDto> views = statsClient.getStats(baseEvent.getPublishedOn()
+                        .format(Constants.DATE_TIME_FORMATTER),
+                LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER),
+                List.of(request.getRequestURI()),
+                true);
+        log.debug("received from stats client list of StatsViewDto: {}", views);
+        baseEvent.setViews(views.get(0).getHits());
+        eventRepository.save(baseEvent);
         return EventMapper.INSTANCE.getEventDto(baseEvent);
     }
 
@@ -341,5 +382,16 @@ public class EventServiceImpl implements EventService {
                 .map(RequestMapper.INSTANCE::toParticipationRequestDto)
                 .toList());
         return result;
+    }
+
+    private void sendStats(HttpServletRequest request) {
+        log.debug("save stats hit, uri = {}", request.getRequestURI());
+        log.debug("save stats hit, remoteAddr = {}", request.getRemoteAddr());
+        statsClient.hit(StatsHitDto.builder()
+                .app("main-service")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now())
+                .build());
     }
 }

@@ -1,5 +1,6 @@
 package ru.practicum.controller.publicapi;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,15 +33,16 @@ public class PublicEventController {
                                                @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                                @RequestParam(required = false) SortingOptions sortingOptions,
                                                @RequestParam(defaultValue = "0") Integer from,
-                                               @RequestParam(defaultValue = "10") Integer size) {
+                                               @RequestParam(defaultValue = "10") Integer size,
+                                               HttpServletRequest request) {
         log.info("getting events public");
         return eventService.findEventsByFilterPublic(text, categories, paid, rangeStart, rangeEnd,
-                onlyAvailable, sortingOptions, from, size);
+                onlyAvailable, sortingOptions, from, size, request);
     }
 
     @GetMapping("/{eventId}")
-    public EventDto getEventById(@PathVariable long eventId) {
+    public EventDto getEventById(@PathVariable long eventId, HttpServletRequest request) {
         log.info("getting event {} public", eventId);
-        return eventService.findEventPublic(eventId);
+        return eventService.findEventPublic(eventId, request);
     }
 }

@@ -28,7 +28,7 @@ public class StatsClientImpl implements StatsClient {
 
     @Override
     public StatsHitDto hit(StatsHitDto statsHitDto) {
-        log.info("save statistics for {}", statsHitDto);
+        log.info("save statistics for {}", statsHitDto.toString());
         try {
             return restClient.post()
                     .uri(baseUri + "/hit")
