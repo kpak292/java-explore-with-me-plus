@@ -48,6 +48,7 @@ public interface EventService {
     EventRequestStatusUpdateResult updateRequestsStatus(long userId,
                                                         long eventId,
                                                         EventRequestStatusUpdateRequest request);
+
     EventDto findEventPublic(long eventId, HttpServletRequest request);
 }
 

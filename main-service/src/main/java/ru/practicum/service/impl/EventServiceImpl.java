@@ -3,8 +3,6 @@ package ru.practicum.service.impl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +12,6 @@ import ru.practicum.Constants;
 import ru.practicum.StatsHitDto;
 import ru.practicum.StatsViewDto;
 import ru.practicum.client.StatsClient;
-import ru.practicum.dal.CategoryRepository;
-import ru.practicum.dal.EventRepository;
-import ru.practicum.dal.LocationRepository;
-import ru.practicum.dal.UserRepository;
 import ru.practicum.dal.*;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.enums.EventActionStateAdmin;
@@ -263,9 +257,9 @@ public class EventServiceImpl implements EventService {
         sendStats(request);
         List<StatsViewDto> views = statsClient.getStats(baseEvent.getPublishedOn()
                         .format(Constants.DATE_TIME_FORMATTER),
-                LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER)
-                , List.of(request.getRequestURI())
-                , true);
+                LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER),
+                List.of(request.getRequestURI()),
+                true);
         log.debug("received from stats client list of StatsViewDto: {}", views);
         baseEvent.setViews(views.get(0).getHits());
         eventRepository.save(baseEvent);
