@@ -67,5 +67,5 @@ CREATE TABLE IF NOT EXISTS comments (
     author_id BIGINT,
     message VARCHAR(255),
     FOREIGN KEY (event_id) REFERENCES events (id),
-    FOREIGN KEY (author_id) REFERENCES users (id),
+    FOREIGN KEY (author_id) REFERENCES users (id)
 );
