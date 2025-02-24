@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class UpdateCompilationRequest {
-    List<Long> events;
+    Set<Long> events;
     Boolean pinned;
 
     @Size(max = 50)

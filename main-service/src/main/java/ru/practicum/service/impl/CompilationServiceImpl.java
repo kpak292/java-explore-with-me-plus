@@ -35,10 +35,11 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void deleteById(Long id) {
-        Compilation compilation = compilationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("compilation is not found with id = " + id));
-
-        compilationRepository.deleteById(id);
+        if (!compilationRepository.existsById(id)) {
+            throw new NotFoundException("compilation is not found with id = " + id);
+        } else {
+            compilationRepository.deleteById(id);
+        }
     }
 
     @Override

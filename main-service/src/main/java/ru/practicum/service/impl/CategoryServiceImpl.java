@@ -66,7 +66,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private Category getCategoryIfExists(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category with id %d not found".formatted(id)));
+        if (!categoryRepository.existsById(id)) {
+            throw new NotFoundException("Category with id %d not found".formatted(id));
+        } else return categoryRepository.findById(id).orElseThrow();
     }
 }

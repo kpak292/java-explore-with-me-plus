@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.dto.event.EventShortDto;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class CompilationDto {
     long id;
-    List<EventShortDto> events;
+    Set<EventShortDto> events;
     Boolean pinned;
     String title;
 }
