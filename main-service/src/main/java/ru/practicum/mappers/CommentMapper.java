@@ -9,6 +9,8 @@ import ru.practicum.model.Comment;
 import ru.practicum.model.Event;
 import ru.practicum.model.User;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
@@ -17,4 +19,6 @@ public interface CommentMapper {
 
     @Mapping(target = "id", ignore = true)
     Comment getComment(NewCommentDto commentDto, Event event, User author);
+
+    List<CommentDto> toCommentDtoList(List<Comment> comments);
 }
