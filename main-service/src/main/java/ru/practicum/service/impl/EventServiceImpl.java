@@ -21,13 +21,11 @@ import ru.practicum.dto.event.enums.SortingOptions;
 import ru.practicum.exceptions.ConflictException;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.exceptions.ValidationException;
+import ru.practicum.mappers.CommentMapper;
 import ru.practicum.mappers.EventMapper;
 import ru.practicum.mappers.EventUpdater;
 import ru.practicum.mappers.RequestMapper;
-import ru.practicum.model.Event;
-import ru.practicum.model.Location;
-import ru.practicum.model.Request;
-import ru.practicum.model.User;
+import ru.practicum.model.*;
 import ru.practicum.service.EventService;
 
 import java.time.LocalDateTime;
@@ -56,7 +54,13 @@ public class EventServiceImpl implements EventService {
     RequestRepository requestRepository;
 
     @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     private StatsClient statsClient;
+
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Override
     public EventDto save(long userId, NewEventDto newEventDto) {
@@ -263,6 +267,10 @@ public class EventServiceImpl implements EventService {
         log.debug("received from stats client list of StatsViewDto: {}", views);
         baseEvent.setViews(views.get(0).getHits());
         eventRepository.save(baseEvent);
+        List<Comment> comments = commentRepository.findAllByEventId(eventId);
+        if (!comments.isEmpty()) {
+            return EventMapper.INSTANCE.getEventDtoWithComments(baseEvent, commentMapper.toCommentDtoList(comments));
+        }
         return EventMapper.INSTANCE.getEventDto(baseEvent);
     }
 
