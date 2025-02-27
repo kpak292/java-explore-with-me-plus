@@ -29,7 +29,7 @@
 									"        let event = await api.addEvent(user.id, rnd.getEvent(category.id));\r",
 									"        pm.collectionVariables.set(\"eid\",event.id)\r",
 									"        event = await api.publishEvent(event.id);\r",
-									"        comment = await rnd.getComment();\r",
+									"        comment = rnd.getComment();\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
