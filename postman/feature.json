@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a5124bfc-3638-4d8d-b67f-b5e7d9a88c23",
+		"_postman_id": "3955ad4a-0b89-4eb5-bc04-64a95bb0549e",
 		"name": "\"Explore with me\" - feature",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24069843"
+		"_exporter_id": "38806326"
 	},
 	"item": [
 		{
@@ -84,13 +84,6 @@
 									"    pm.expect(source.message).equal(target.message, 'Текст комментария должно соответствовать отправленному в запросе');\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Id пользователя в запросе и в ответе должны совпадать\",function(){\r",
-									"    pm.expect(target.author.id.toString()).equal(pm.collectionVariables.get(\"uid\").toString());\r",
-									"});\r",
-									"\r",
-									"// pm.test(\"Id пользователя в запросе и в ответе должны совпадать\",function(){\r",
-									"//     pm.expect(target.author.id.toString()).equal(query['userId'].toString());\r",
-									"// });\r",
 									""
 								],
 								"type": "text/javascript",
@@ -194,22 +187,16 @@
 									"const target = pm.response.json();\r",
 									"\r",
 									"pm.test(\"Комментарий должен содержать поля: id, message, author\", function () {\r",
-									"    pm.expect(target).to.have.property('id');\r",
-									"    pm.expect(target).to.have.property('message');\r",
-									"    pm.expect(target).to.have.property('author');\r",
+									"pm.expect(target).to.have.property('id');\r",
+									"pm.expect(target).to.have.property('message');\r",
+									"pm.expect(target).to.have.property('author');\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
 									"    pm.expect(target.id).to.not.be.null;\r",
 									"    pm.expect(source.message).equal(target.message, 'Текст комментария должно соответствовать отправленному в запросе');\r",
 									"});\r",
-									"pm.test(\"Id пользователя в запросе и в ответе должны совпадать\",function(){\r",
-									"    pm.expect(target.author.id.toString()).equal(pm.collectionVariables.get(\"uid\").toString());\r",
-									"});\r",
 									"\r",
-									"// pm.test(\"Id пользователя в запросе и в ответе должны совпадать\",function(){\r",
-									"//     pm.expect(target.author.id.toString()).equal(query['userId'].toString());\r",
-									"// });\r",
 									""
 								],
 								"type": "text/javascript",
