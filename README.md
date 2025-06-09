@@ -42,7 +42,39 @@ erDiagram
         bigint views
     }
 
+    requests {
+        bigint id PK
+        bigint requester_id FK
+        bigint event_id FK
+        timestamp created_on
+        varchar(100) status
+    }
+
+    compilations {
+        bigint id PK
+        boolean pinned
+        varchar(50) title
+    }
+
+    event_compilations {
+        bigint event_id FK
+        bigint compilation_id FK
+    }
+
+    comments {
+        bigint id PK
+        bigint event_id FK
+        bigint author_id FK
+        varchar(255) message
+    }
+    
     users ||--o{ events: user_id
+    users ||--o{ requests: requester_id
+    events ||--o{ requests: event_id
+    events ||--o{ comments: event_id
+    users ||--o{ comments: author_id
+    events ||--o{ event_compilations: event_id
+    compilations ||--o{ event_compilations: compilation_id
     categories ||--o{ events: category_id
     locations ||--o{ events: location_id
 ```
